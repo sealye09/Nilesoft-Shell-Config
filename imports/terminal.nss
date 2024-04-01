@@ -1,11 +1,11 @@
-
-
-menu(type = '*' where = (sel.count or wnd.is_taskbar or wnd.is_edit) title = title.terminal sep = 'top' image = icon.run_with_powershell)
-{
-    var{ tip_run_admin = ["Press SHIFT key to run " + this.title + " as administrator", tip.warning, 1.0] }
-    item(where = sys.ver.major >= 10 title = title.Windows_Terminal tip = tip_run_admin admin = key.shift() image = '@package.path("WindowsTerminal")\WindowsTerminal.exe' cmd = 'wt.exe' arg = '-d "@sel.path\."')
-    item(title = "Git Bash" admin = @key.shift() tip = tip_run_admin image = '.././icons/git-for-windows.ico' cmd = 'wt.exe' args = '-p "Git Bash" -d .')
-    item(title = title.command_prompt tip = tip_run_admin admin = key.shift() image cmd = 'cmd.exe')
-    item(title = "WSL Ubuntu" tip = tip_run_admin admin = @key.shift() image = '.././icons/ubuntu-favicon-32x32.png' cmd = 'wsl.exe' arg = '-d Ubuntu-22.04')
-    // item(title = "powershell" admin = @key.shift() tip = tip_run_admin image cmd = 'pwsh.exe' args = '-noexit -command Set-Location -Path "@sel.dir\."')
-}
+menu(type='*' where=(sel.count or wnd.is_taskbar or wnd.is_edit) title=title.terminal sep=sep.top image=icon.run_with_powershell)
+    {
+        $tip_run_admin=["\xE1A7 Press SHIFT key to run " + this.title + " as administrator", tip.warning, 1.0]
+        $has_admin=key.shift() or key.rbutton()
+        
+        item(where=package.exists("WindowsTerminal") title=title.Windows_Terminal tip=tip_run_admin admin=has_admin image='@package.path("WindowsTerminal")\WindowsTerminal.exe' cmd="wt.exe" arg=`-d "@sel.path\."`)
+        item(title=title.command_prompt tip=tip_run_admin admin=has_admin image cmd-prompt=`/K TITLE Command Prompt &ver& PUSHD "@sel.dir"`)
+        // item(title=title.windows_powershell admin=has_admin tip=tip_run_admin image cmd-ps=`-noexit -command Set-Location -Path '@sel.dir'`)
+        item(title="Git Bash" admin= has_admin tip=tip_run_admin image=icon.git_bash cmd='wt.exe' args='-p "Git Bash" -d .')
+        item(title="WSL Ubuntu" tip=tip_run_admin admin= has_admin image=icon.ubuntu cmd='wt.exe' arg='-p "Ubuntu 22.04.3 LTS" -d .')
+    }
